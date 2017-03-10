@@ -1,0 +1,12 @@
+body {
+	background-color:#99ffeb;
+}
+
+p {
+	font-size:1.2em;
+}
+/*app background*/ 
+.backdrop {
+margin-top:4em;
+padding:2em;
+}
