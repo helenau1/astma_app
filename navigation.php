@@ -20,7 +20,7 @@
             <li <?php if ($currentPage == 'datainput.php') { echo 'class="active"';} ?>><a href="datainput.php">Sports diary</a></li>
             <li <?php if ($currentPage == 'statistics.php') { echo 'class="active"';} ?>><a href="statistics.php">Statistics</a></li>
             <li <?php if ($currentPage == 'account.php') { echo 'class="active"';} ?>><a href="account.php">Account</a></li>
-            <li><a href="signin.php"><span class="glyphicon glyphicon-log-out"></span> Sign out</a></li>
+            <li><a href="logout.php"><span class="glyphicon glyphicon-log-out"></span> Sign out</a></li>
           </ul>
         </div>
       </div>
