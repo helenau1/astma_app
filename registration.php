@@ -1,3 +1,50 @@
+<?php /* This php block will be executed after the user submits the signup data
+ by clicking the sign-up button
+*/ if(isset($_POST["sign-up"])) {
+
+	/* Form Field Validation */
+foreach($_POST as $key=>$value) {
+	if(empty($_POST[$key])) {
+		$error_message = "All fields are required!";
+		break;
+	}
+}
+
+/* Password Matching Validation */
+if($_POST['password1'] != $_POST['password2']){
+	$error_message = 'Passwords should match.';
+}
+if(!isset($error_message)) {
+	if (!filter_var($_POST["email1"], FILTER_VALIDATE_EMAIL)) {
+		$error_message = "Invalid Email Address!";
+	}
+}
+  if(!isset($error_message)) {
+  	require_once('dbinfo.php');
+  	// Connect to the database
+  	$databaseconnection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+  	$email1 = mysqli_real_escape_string($databaseconnection, trim($_POST['email1'])); //mysqli_real_escape_string is used to enhance security
+  	$password1 = mysqli_real_escape_string($databaseconnection, trim($_POST['password1']));
+  	$password2 = mysqli_real_escape_string($databaseconnection, trim($_POST['password2']));
+  	
+      // Check that the provided username does not yet exist in the database
+      $query = "SELECT * FROM user WHERE email = '$email1'";
+      $data = mysqli_query($databaseconnection, $query);
+     if (mysqli_num_rows($data) == 0) { // The username does not exist yet, so insert the data into the database.
+      	
+      	$password = password_hash($password1, PASSWORD_DEFAULT); // password_hash is used to encrypt the password
+      	$query = "INSERT INTO user (email, password) VALUES ('$email1','$password')"; // MySQL will automatically generate the userId
+        mysqli_query($databaseconnection, $query);
+        mysqli_close($databaseconnection);
+        $error_message = "";
+        $success_message = "You have registered successfully! You may now sign in."; 
+        } else {
+        	$error_message = "There was a problem with registration. Try Again!";
+        }
+  }
+  mysqli_close($databaseconnection);
+} ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head> <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,7 +60,9 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
  
+ 
 <body style="background-color:#99ffeb;">
+
 <?php require './navigation2.php';  // Getting navigation bar from include file
 ?>
 <div class="container">
@@ -32,7 +81,7 @@ It allows you to monitor your sports activities and emergency medication use.
 	
   	<div class="form-group">
     	<h4>Email address</h4>
-    	<input type="email" class="form-control" name="email1">
+    	<input type="email" class="form-control" name="email1" value="<?php if(isset($_POST['email1'])) echo $_POST['email1']; ?>">
   	</div>
   	
   	<div class="form-group">
@@ -46,64 +95,16 @@ It allows you to monitor your sports activities and emergency medication use.
   	</div>
   	
   	<input type="submit" value="Sign up" name="sign-up" class="btn btn-default">
+  	
 	</form>
-		<?php /* This php block will only be executed after the user submits the signup data
- by clicking the sign-up button
-*/
-session_start();
-require_once('dbinfo.php');
+	
+	<div style="padding-top:1.5em; color:blue;"><?php if(!empty($success_message)) { ?>	
+		<div class="success-message"><?php if(isset($success_message)) echo $success_message; ?></div>
+		<?php } ?>
+		<?php if(!empty($error_message)) { ?>	
+		<div class="error-message"><?php if(isset($error_message)) echo $error_message; ?></div>
+		<?php } ?> </div>
 
-  // Connect to the database
-  $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-
-  if (isset($_POST['sign-up'])) {
-    // Get the signup data from the POST
-    $email1 = mysqli_real_escape_string($dbc, trim($_POST['email1'])); //mysqli_real_escape_string is used to enhance security
-    $password1 = mysqli_real_escape_string($dbc, trim($_POST['password1']));
-    $password2 = mysqli_real_escape_string($dbc, trim($_POST['password2']));
-
-    if (!empty($email1) && !empty($password1) && !empty($password2) && ($password1 == $password2)) {
-      // Check that the provided username does not yet exist in the database
-      $query = "SELECT * FROM user WHERE email = '$email1'";
-      $data = mysqli_query($dbc, $query);
-      if (mysqli_num_rows($data) == 0) {
-        // The username does not exist yet, so insert the data into the database.
-      	// The userId is configured with AUTO-INCREMENT in the table. MySQL will automatically generate the userId
-        // SHA is used to encrypt the password
-      	$query = "INSERT INTO user (email, password) VALUES ('$email1', SHA('$password1'))"; 
-        mysqli_query($dbc, $query);
-        
-        // Get the userId of the just created account
-        $query = "SELECT userId FROM user WHERE email = '$email1'";
-        $data = mysqli_query($dbc, $query);
-        $row = mysqli_fetch_array($data);
-        
-        // Set the session variables to hold the userId of the just created account. Set also the cookies.
-        $_SESSION['userId'] = $row['userId'];
-        setcookie('userId', $row['userId'], time() + (60 * 60 * 24 * 30));    // expires in 30 days
-        
-        mysqli_close($dbc);
-                
-        // Confirm success with the user
-        echo '<h4>Thanks for signing up!</h4>';
-        echo '<p>Your new account has been successfully created. <a href="index.php">Start here</a></p>';
-            
-        // mysqli_close($dbc);
-        exit();
-      }
-      else {
-        // An account already exists for this username, so display an error message
-        echo '<p class="text-danger">An account already exists for this email address. Please use a different address.</p>';
-        $email1 = "";
-      }
-    }
-    else {
-      echo '<p class="text-info">You must enter all of the sign-up data.</p>';
-    }
-  }
-
-  mysqli_close($dbc);
-?>
 	</div>
 	<div class="col-lg-4 col-md-4 col-sm-4 hidden-xs"> <!-- styling for different screen sizes-->
 	</div>
