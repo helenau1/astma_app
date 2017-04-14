@@ -1,29 +1,31 @@
 <?php
-session_start();
 require_once('dbinfo.php');
+session_start();
+
 
 // Clear the error message
 $message = "";
-// start connection with the database
-$databaseconnection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+
 // If the user isn't logged in, try to log him/her in
 if (!isset($_SESSION['userId']))
 {
-if(!empty($_POST["sign-in"])) {
-
+if(isset($_POST["sign-in"])) {
+	// start connection with the database
+	$databaseconnection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 	// Getting the data the user has entered
 	$email = mysqli_real_escape_string($databaseconnection, trim($_POST['email']));
 	$password = mysqli_real_escape_string($databaseconnection, trim($_POST['password']));
 	// Getting the userId from the database
+	if (!empty($email) && !empty($password)) {
 	$query = "SELECT userId, password FROM user WHERE email = '$email'";
 	$data = mysqli_query($databaseconnection, $query);
-	if (mysqli_num_rows($data) == 1) {
+
+	if (mysqli_num_rows($data) == 1) { 
 		// Setting the userid session variable. Set the cookies. Redirect to the home page
 		$row = mysqli_fetch_array($data);
-		//checking the password
-		password_verify($password==$row['password']);
+		$passwordcrypted = $row['password'];
+		if (password_verify($password, $passwordcrypted)){
 		
-	
 		$_SESSION['userId'] = $row['userId'];
 		setcookie('userId', $row['userId'], time() + (60 * 60 * 24 * 30));    // expires in 30 days
 	
@@ -31,8 +33,13 @@ if(!empty($_POST["sign-in"])) {
 		$home_url = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php';
 		header('Location: ' . $home_url);
 		}
-	} else {
+ else {
 	$message = "Invalid Username or Password!";
+		}
+	}}
+	else {
+		$message = "Enter your email address and password and try again.";
+		}
 	}
 }
 ?>
