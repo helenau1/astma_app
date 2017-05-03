@@ -86,7 +86,7 @@ It allows you to monitor your sports activities and emergency medication use.
   	<input type="submit" name="sign-in" value="Sign in" class="btn btn-default">
 	</form>
 	
-<div class="error-message"><?php if(isset($message)) { echo $message; } ?></div>
+<div style = "padding-top:1.5; color:blue;" class="error-message"><?php if(isset($message)) { echo $message; } ?></div>
 	</div>
 	<div class="col-lg-4 col-md-4 col-sm-4 hidden-xs"> <!-- styling for different screen sizes-->
 	</div>

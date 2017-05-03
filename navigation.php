@@ -13,6 +13,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
           </button>
         </div>
         <div id="navbar1" class="collapse navbar-collapse">
