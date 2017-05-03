@@ -15,35 +15,39 @@
 		//Checking that one of the feeling options is checked
 		if (empty($_POST['radioOptions2'])) { $errormessage = "The value for feeling is missing!"; }
 		
-		/*Checking that the value submitted for inhales is  numeric. It could be 0 and therefore filter_var doesn't work here 
-		if (!is_numeric($_POST['inhales'])) { $errormessage = "The value for inhales is invalid!"; }*/
+		//Inhales can be empty
 		
-		//Checking that the comment doesn't exceed the maximum length  
+		//Checking that the comment doesn't exceed the maximum length . Comment is optional so it can be empty
 		if (strlen($_POST['comment'])>=200){
 			$errormessage = "Your comment should not exceed 200 characters!";
 		}	
 	
-
+		//if there are no error messages, the data is added to the database
 		if(!isset($errormessage)) {
-		require_once('dbinfo.php');
+		require_once('dbinfo.php'); //getting the info needed for database connection from an include file
 		
-		$databaseconnection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+		$databaseconnection = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME); //preparing the database connection
 		
+		//checking if the connection works
 		if (mysqli_connect_errno()) {
 			printf("Connect failed: %s\n", mysqli_connect_error());
 			exit();}
-			
-		$stmt = $databaseconnection->stmt_init();
+			//initializing the database connection
+			$stmt = $databaseconnection->stmt_init(); 
+			//preparing the sql statement
 			$stmt->prepare("INSERT INTO sportsEvent (userId, dateof, duration, intensity, feeling, inhales, comment) VALUES (?, ?, ?, ?, ?, ?, ?)");
 			
+			//determining the parameters that are added to the database
 			$date = $_POST['date'];
 			$duration = $_POST['duration'];
 			$intensity =$_POST['radioOptions'];
 			$feeling = $_POST['radioOptions2'];
 			$inhales =$_POST['inhales'];
 			$comment=$_POST['comment'];
+			//adding the parameters to an array that replaces the question marks in the sql statement and determining their type
 			$stmt->bind_param("isissis", $_SESSION['userId'], $date, $duration, $intensity, $feeling, $inhales, $comment);
-				
+			
+			//executing the sql query and confirming success
 			if($stmt->execute()) {
 				$successmessage = "Your data was added Successfully!";
 				
@@ -51,6 +55,7 @@
 			} else {
 				$errormessage = "There was a problem adding the data. Please try again!";
 			}
+			//closing the connections
 			$stmt->close();
 			$databaseconnection->close();
 			}
@@ -83,8 +88,10 @@
 	</div>
 	<div class="col-xs-12 col-lg-4 col-md-4 col-sm-4"> 
 	
-	
+	<!-- Start of the form for adding the sports diary data & declaring the method for getting the data from the form-->
 	<form method="post" action=""> 
+	<!-- All of the sections of the form use php to save the inputted data in case of error messages so the user doesn't have to input everything again-->
+	
 	<!--Choosing the date for adding data to the database-->
 	<div class="form-group">
   <h4>Date of the sport event</h4>
@@ -104,7 +111,7 @@
 	<h4>Intensity</h4>
   	<div class="radio">
   <label class="form-check-label">
-    <input class="form-check-input" type="radio" name="radioOptions" id="radio1" value="low" <?php if (isset($_POST[ 'radioOptions']) && $_POST[ 'radioOptions']=='low' ){echo ' checked="checked"';}?>> Low
+    <input class="form-check-input" type="radio" name="radioOptions" id="radio1" value="low" <?php if (isset($_POST[ 'radioOptions']) && $_POST[ 'radioOptions']=='low' ){echo ' checked="checked"';}?>> Low 
   </label>
 </div>
 <div class="radio">
@@ -137,6 +144,7 @@
 </div>
 </div>
 
+	<!--Adding the amount of inhales-->
 	<div class="form-group">
     	<h4>Emergency medicine inhales</h4>
     	<input type="number" class="form-control" name="inhales" value="<?php if(isset($_POST['inhales'])) echo $_POST['inhales']; ?>" min="0"> 
