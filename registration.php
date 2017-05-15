@@ -41,8 +41,9 @@ if(!isset($error_message)) {
         } else {
         	$error_message = "There was a problem with registration. Try Again!";
         }
+        mysqli_close($databaseconnection);
   }
-  mysqli_close($databaseconnection);
+ 
 } ?>
 
 <!DOCTYPE html>

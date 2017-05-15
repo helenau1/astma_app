@@ -57,6 +57,7 @@ if(isset($_POST["sign-in"])) {
 
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="js/ie10-viewport-bug-workaround.js"></script>
 </head>
  
 <body>

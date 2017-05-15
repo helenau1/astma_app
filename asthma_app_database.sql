@@ -16,7 +16,7 @@ CREATE TABLE user (
 CREATE TABLE sportsEvent (
     eventId int NOT NULL AUTO_INCREMENT,
     userId int NOT NULL,
-    dateof varchar(10) NOT NULL,
+    dateof DATE NOT NULL,
     duration int NOT NULL,
     intensity varchar(10) NOT NULL,
   feeling varchar(10) NOT NULL,
