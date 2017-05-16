@@ -11,8 +11,8 @@ if(isset($_POST['statistics-query'])) {
 	//if there are no error messages, the data is added to the database
 	if(!isset($errormessage)) {
 		
-		$startdate = mysqli_real_escape_string($databaseconnection, trim($_POST['startdate']));
-		$enddate = mysqli_real_escape_string($databaseconnection, trim($_POST['enddate']));
+		$startdate = $_POST['startdate'];
+		$enddate = $_POST['enddate'];
 		$checker = $_COOKIE['userId'];
  
     //include database connection
