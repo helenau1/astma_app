@@ -11,8 +11,8 @@ if(isset($_POST['statistics-query'])) {
 	//if there are no error messages, the data is added to the database
 	if(!isset($errormessage)) {
 		
-		$startdate = $_POST['startdate'];
-		$enddate = $_POST['enddate'];
+		$startdate = mysqli_real_escape_string($databaseconnection, trim($_POST['startdate']));
+		$enddate = mysqli_real_escape_string($databaseconnection, trim($_POST['enddate']));
 		$checker = $_COOKIE['userId'];
  
     //include database connection
@@ -92,7 +92,7 @@ if(isset($_POST['statistics-query'])) {
 	<div style = "padding-top:1.5em; color:blue;" class="error-message"><?php if(isset($errormessage)) { echo $errormessage; } ?></div>
 	
 	</div></div>
-	
+	<?php if(isset($_POST['statistics-query'])) {?>
 	<div class="row"> 
 <div class="col-lg-3 col-md-3 col-sm-3 hidden-xs"></div>
 
@@ -193,7 +193,7 @@ if(isset($_POST['statistics-query'])) {
   <div class="col-lg-4 col-md-4 col-sm-4 hidden-xs"> <!-- styling for different screen sizes-->
 	</div>
 </div>
-
+<?php }?>
 	
 	<?php include './footer.php'; ?> <!-- Getting footer from include file -->
 	</div>

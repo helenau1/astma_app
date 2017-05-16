@@ -45,7 +45,7 @@
 			$inhales =$_POST['inhales'];
 			$comment=$_POST['comment'];
 			//adding the parameters to an array that replaces the question marks in the sql statement and determining their type
-			$stmt->bind_param("isissis", $_SESSION['userId'], $date, $duration, $intensity, $feeling, $inhales, $comment);
+			$stmt->bind_param("isissis", $_COOKIE['userId'], $date, $duration, $intensity, $feeling, $inhales, $comment);
 			
 			//executing the sql query and confirming success
 			if($stmt->execute()) {
