@@ -1,5 +1,6 @@
 <?php
 
+
 if(isset($_POST['statistics-query'])) {
 	
 	//Checking if the start date is added
@@ -10,23 +11,29 @@ if(isset($_POST['statistics-query'])) {
 	
 	//if there are no error messages, the data is added to the database
 	if(!isset($errormessage)) {
-		
-		$startdate = $_POST['startdate'];
-		$enddate = $_POST['enddate'];
-		$checker = $_COOKIE['userId'];
  
     //include database connection
     require_once('dbinfo.php');
     $databaseconnection = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+    
+    //checking if the connection works
+    if (mysqli_connect_errno()) {
+    	printf("Connection failed: %s\n", mysqli_connect_error());
+    	exit();}
+    
     //query all records from the database
+    
+    $startdate = mysqli_real_escape_string($databaseconnection, trim($_POST['startdate']));
+    $enddate = mysqli_real_escape_string($databaseconnection, trim($_POST['enddate']));
+    $checker = mysqli_real_escape_string($databaseconnection, trim($_COOKIE['userId']));
+    
     $query = mysqli_query ($databaseconnection, "SELECT Sum(duration) AS TotalDuration, Sum(inhales) AS TotalInhales FROM sportsEvent WHERE (dateof BETWEEN '$startdate' AND '$enddate') AND userId= '$checker'");
     $query2 = mysqli_query($databaseconnection, "SELECT intensity, SUM(duration) AS Duration, SUM(inhales) AS MedicineInhales FROM sportsEvent WHERE (dateof BETWEEN '$startdate' AND '$enddate') AND userId= '$checker' GROUP BY intensity");
     $query3 = mysqli_query($databaseconnection, "SELECT feeling, SUM(duration) AS Duration, SUM(inhales) AS MedicineInhales FROM sportsEvent WHERE (dateof BETWEEN '$startdate' AND '$enddate') AND userId= '$checker' GROUP BY feeling");
     $query4 = mysqli_query($databaseconnection, "SELECT dateof, duration, inhales, feeling, intensity, comment FROM sportsEvent WHERE (dateof BETWEEN '$startdate' AND '$enddate') AND userId= '$checker'");
  
-    if( $query->num_rows >0){
+    if ($row = mysqli_fetch_array($query)) {
     	
-    	$row = mysqli_fetch_array($query);
       $TotalDuration =htmlspecialchars($row['TotalDuration']);
       $TotalInhales =htmlspecialchars($row['TotalInhales']);
       
@@ -34,7 +41,8 @@ if(isset($_POST['statistics-query'])) {
       $msg2 = "Total amount of emergency medicine inhales is $TotalInhales.";
     
     }
-    else {$errormessage = "No data was found for this period";}
+    else { echo 'There was no data to show for this period';
+    }
 
 	
 	}
@@ -42,7 +50,9 @@ if(isset($_POST['statistics-query'])) {
 	$databaseconnection->close();
 	}
 	
-
+function message() { //function to display the error message in the tables if there are no data to show in the database
+	echo 'There was no data to show for this period';
+}
 
     
 ?>
@@ -117,10 +127,10 @@ if(isset($_POST['statistics-query'])) {
     <tbody>
 <?php 
 	if($query4->num_rows ==0) {
-		$erromessage = 'There was no data to show for this period';
+		 message();
 	}
 
-	while($row4 = mysqli_fetch_array($query4)){
+	while($row4 = mysqli_fetch_array($query4)){ //htmlsecialchars used to make sure there is no harmful data
 		printf ("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>", htmlspecialchars($row4['dateof']), htmlspecialchars($row4['duration']), htmlspecialchars($row4['inhales']), htmlspecialchars($row4['feeling']),htmlspecialchars($row4['intensity']),htmlspecialchars($row4['comment']));
         }
     ?>
@@ -151,7 +161,7 @@ if(isset($_POST['statistics-query'])) {
     <tbody>
 <?php 
 	if($query2->num_rows ==0) {
-		$erromessage = 'There was no data to show for this period';
+		message();
 	}
 
 	while($row2 = mysqli_fetch_array($query2)){
@@ -178,7 +188,7 @@ if(isset($_POST['statistics-query'])) {
     <tbody>
 <?php 
 	if($query3->num_rows ==0) {
-		$erromessage = 'There was no data to show for this period';
+		message();
 	}
 
 	while($row3 = mysqli_fetch_array($query3)){

@@ -1,7 +1,7 @@
-<!-- navigation bar for the registration and login-->
+<!-- navigation bar for the registration and login. It displays the content for the user who is not logged in-->
 
 <?php $currentPage = basename($_SERVER['SCRIPT_FILENAME']); ?> <!-- setting current page for navigation -->
-
+<!-- creating the navbar that collapses when the screen size gets small enough -->
 <nav class="navbar navbar-inverse navbar-fixed-top" id="navigationbar">
       <div class="container">
       <div class="navbar-header">

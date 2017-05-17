@@ -15,8 +15,6 @@
 		//Checking that one of the feeling options is checked
 		if (empty($_POST['radioOptions2'])) { $errormessage = "The value for feeling is missing!"; }
 		
-		//Inhales can be empty
-		
 		//Checking that the comment doesn't exceed the maximum length . Comment is optional so it can be empty
 		if (strlen($_POST['comment'])>=200){
 			$errormessage = "Your comment should not exceed 200 characters!";
@@ -30,14 +28,15 @@
 		
 		//checking if the connection works
 		if (mysqli_connect_errno()) {
-			printf("Connect failed: %s\n", mysqli_connect_error());
+			printf("Connection failed: %s\n", mysqli_connect_error());
 			exit();}
+			
 			//initializing the database connection
 			$stmt = $databaseconnection->stmt_init(); 
 			//preparing the sql statement
 			$stmt->prepare("INSERT INTO sportsEvent (userId, dateof, duration, intensity, feeling, inhales, comment) VALUES (?, ?, ?, ?, ?, ?, ?)");
 			
-			//determining the parameters that are added to the database
+			//determining the parameters that are added to the database. Using prepared statement automatically sanitizes the input against sql injection
 			$date = $_POST['date'];
 			$duration = $_POST['duration'];
 			$intensity =$_POST['radioOptions'];
@@ -52,6 +51,7 @@
 				$successmessage = "Your data was added Successfully!";
 				
 				$errormessage="";
+				//displaying error message if the query fails
 			} else {
 				$errormessage = "There was a problem adding the data. Please try again!";
 			}
@@ -93,7 +93,7 @@
 	
 	<!-- Start of the form for adding the sports diary data & declaring the method for getting the data from the form-->
 	<form method="post" action=""> 
-	<!-- All of the sections of the form use php to save the inputted data in case of error messages so the user doesn't have to input everything again-->
+	<!-- All of the sections of the form use php to save the inputted data in the value of the field in case of error messages so the user doesn't have to input everything again-->
 	
 	<!--Choosing the date for adding data to the database-->
 	<div class="form-group">
@@ -155,14 +155,14 @@
 
 	<!--Adding comments to the diary-->
 		<div class="form-group">
-  <h4>Add comment </h4><h6>(max 200 characters)</h6>
-  <textarea class="form-control" rows="2" name="comment" maxlength="200"><?php if(isset($_POST['comment'])) echo $_POST['comment']; ?></textarea>
+  <h4>Add comment </h4><h6>(max 200 characters)</h6> 
+  <textarea class="form-control" rows="2" name="comment" maxlength="200"><?php if(isset($_POST['comment'])) echo $_POST['comment']; ?></textarea> <!-- Determining the maximum length of the text field-->
 </div>
 
-  	<button type="submit" name="submit-data"class="btn btn-default">OK</button>
+  	<button type="submit" name="submit-data"class="btn btn-default">OK</button> <!-- Button to submit the sports diary form-->
 
 </form>
-
+<!-- Displaying and styling the error and success messages for the sql and for actions determined in the php section on top of the page-->
 <div style = "padding-top:1.5; color:blue;" class="error-message"><?php if(isset($errormessage)) { echo $errormessage; } ?></div>
 <div style = "padding-top:1.5; color:blue;" class="success-message"><?php if(isset($successmessage)) { echo $successmessage; } ?></div>
 	</div>

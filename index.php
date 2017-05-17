@@ -1,5 +1,6 @@
 <?php
 
+//checking if the user has an active session or not. If there is a cookie in memory, it is assigned as a session ID and user gets signed in
  if (!isset($_SESSION['userId'])) {
     if (isset($_COOKIE['userId'])) {
       $_SESSION['userId'] = $_COOKIE['userId'];
