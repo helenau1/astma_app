@@ -48,7 +48,7 @@
 			
 			//executing the sql query and confirming success
 			if($stmt->execute()) {
-				$successmessage = "Your data was added Successfully!";
+				$successmessage = "Your data was added successfully!";
 				
 				$errormessage="";
 				//displaying error message if the query fails

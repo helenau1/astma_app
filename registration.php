@@ -122,7 +122,7 @@ It allows you to monitor your sports activities and emergency medication use.
 
 	</div>
 	<div class="col-lg-4 col-md-4 col-sm-4 hidden-xs"> <!-- styling for different screen sizes-->
-	</div></div>></div>
+	</div></div></div>
 	<?php include './footer.php'; ?> <!-- Getting footer from include file -->
 	</div>
 	
