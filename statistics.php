@@ -1,5 +1,7 @@
 <?php
-
+function message() { // php function to display the error message in the tables if there are no data to show in the database
+	echo 'There was no data to show for this period';
+}
 
 if(isset($_POST['statistics-query'])) {
 	
@@ -32,6 +34,7 @@ if(isset($_POST['statistics-query'])) {
     $query3 = mysqli_query($databaseconnection, "SELECT feeling, SUM(duration) AS Duration, SUM(inhales) AS MedicineInhales FROM sportsEvent WHERE (dateof BETWEEN '$startdate' AND '$enddate') AND userId= '$checker' GROUP BY feeling");
     $query4 = mysqli_query($databaseconnection, "SELECT dateof, duration, inhales, feeling, intensity, comment FROM sportsEvent WHERE (dateof BETWEEN '$startdate' AND '$enddate') AND userId= '$checker'");
  
+    //fetching the results of the first query for displaying as a summary on the statistics page
     if ($row = mysqli_fetch_array($query)) {
     	
       $TotalDuration =htmlspecialchars($row['TotalDuration']);
@@ -41,20 +44,16 @@ if(isset($_POST['statistics-query'])) {
       $msg2 = "Total amount of emergency medicine inhales is $TotalInhales.";
     
     }
-    else { echo 'There was no data to show for this period';
-    }
+    //showing error message if there is no data to show
+    else {  
+    	message();}
 
 	
 	}
-	
+	//closing database connection
 	$databaseconnection->close();
 	}
 	
-function message() { //function to display the error message in the tables if there are no data to show in the database
-	echo 'There was no data to show for this period';
-}
-
-    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -75,42 +74,49 @@ function message() { //function to display the error message in the tables if th
 <div class="container">
 	
 	<div class="row backdrop"> <!-- using class "backdrop" to style the page with own css-->
+	<div class="container">
 	<div class="col-lg-4 col-md-4 col-sm-4 hidden-xs"> <!-- styling for different screen sizes-->
 	</div>
 	<div class="col-xs-12 col-lg-4 col-md-4 col-sm-4"> 
 	
 	<h4>Check your statistics by choosing the wanted time period</h4>
+	
+	<!-- Form for checking statistics for certain dates from the database-->
 	<form method="post" action=""> 
-	<!--Choosing the date for adding data to the database-->
+	
 	<div class="form-group">
 	<h4>Start date</h4>
   <div class="col-6">
-    <input class="form-control input-sm" type="date" name="startdate" value="<?php if(isset($_POST['startdate'])) echo $_POST['startdate']; ?>" id="date-input"> <!-- add date (previous month) with php inside the input tag: value="2011-08-19"-->
+    <input class="form-control input-sm" type="date" name="startdate" value="<?php if(isset($_POST['startdate'])) echo $_POST['startdate']; ?>" id="date-input"> <!-- php for displaying input after submitting the form-->
   </div>
   </div>
   
   <div class="form-group">
   <h4>End date</h4>
   <div class="col-6">
-    <input class="form-control input-sm" type="date" name="enddate" value="<?php if(isset($_POST['enddate'])) echo $_POST['enddate']; ?>" id="date-input2"> <!-- add current date with php inside the input tag: value="2011-08-19"-->
+    <input class="form-control input-sm" type="date" name="enddate" value="<?php if(isset($_POST['enddate'])) echo $_POST['enddate']; ?>" id="date-input2"> <!-- php for displaying input after submitting the form-->
   </div>
   </div>
 	
-  	<button type="submit" name="statistics-query" class="btn btn-default">OK</button>
+  	<button type="submit" name="statistics-query" class="btn btn-default">OK</button> <!-- Submit button for the form-->
 
 </form>
-	<div style = "padding-top:1.5em; color:blue;" class="error-message"><?php if(isset($errormessage)) { echo $errormessage; } ?></div>
+	<div style = "padding-top:1.5em; color:blue;" class="error-message"><?php if(isset($errormessage)) { echo $errormessage; } ?></div> <!-- Place for styling and adding the error message if all the fields of the form are not filled-->
 	
-	</div></div>
+	</div></div></div>
+	
+	<!-- This part is only displayed if the user submits the dates form-->
 	<?php if(isset($_POST['statistics-query'])) {?>
 	<div class="row"> 
+	<div class="container">
 <div class="col-lg-3 col-md-3 col-sm-3 hidden-xs"></div>
 
 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
+	<!-- Displaying the results of the first query-->
 <div style="margin-bottom:2.5em; color:#4d4d4d; text-align:center; "> <h4><?php if(isset($msg)) { echo $msg; } ?></h4>
 	<h4> <?php if(isset($msg2)) { echo $msg2; } ?></h4></div>
 	
+	<!-- Table for query results. Only displayed if the user submits the dates-->
 <div class="table-responsive table-bordered" style="background-color:white;">          
   <table class="table">
     <thead class="thead-inverse">
@@ -126,10 +132,10 @@ function message() { //function to display the error message in the tables if th
     </thead>
     <tbody>
 <?php 
-	if($query4->num_rows ==0) {
+if($query4->num_rows ==0) { //checking if there is data to show. If not, the "no data to show" -message is displayed on the table
 		 message();
 	}
-
+	//printing query results as a table
 	while($row4 = mysqli_fetch_array($query4)){ //htmlsecialchars used to make sure there is no harmful data
 		printf ("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>", htmlspecialchars($row4['dateof']), htmlspecialchars($row4['duration']), htmlspecialchars($row4['inhales']), htmlspecialchars($row4['feeling']),htmlspecialchars($row4['intensity']),htmlspecialchars($row4['comment']));
         }
@@ -141,12 +147,14 @@ function message() { //function to display the error message in the tables if th
 	<div class="col-lg-3 col-md-3 col-sm-3 hidden-xs"></div>
 	
 	</div>
-	
+	</div>
 	
 	
 	<div class ="row">
+	<div class="container">
 	<div class="col-xs-12 col-lg-4 col-md-4 col-sm-4"></div>
 	<div class="col-xs-12 col-lg-4 col-md-4 col-sm-4">
+		<!-- Table for query results. Only displayed if the user submits the dates form-->
 	<div class="table-responsive table-bordered" style="margin-top:2em; background-color:white;">          
   <table class="table">
     <thead class="thead-inverse">
@@ -160,10 +168,10 @@ function message() { //function to display the error message in the tables if th
     </thead>
     <tbody>
 <?php 
-	if($query2->num_rows ==0) {
+	if($query2->num_rows ==0) { //checking if there is data to show. If not, the "no data to show" -message is displayed on the table
 		message();
 	}
-
+	//printing the query results as a table
 	while($row2 = mysqli_fetch_array($query2)){
 		printf ("<tr><td>%s</td><td>%s</td><td>%s</td></tr>", htmlspecialchars($row2['intensity']), htmlspecialchars($row2['Duration']), htmlspecialchars($row2['MedicineInhales']));
         }
@@ -187,10 +195,10 @@ function message() { //function to display the error message in the tables if th
     </thead>
     <tbody>
 <?php 
-	if($query3->num_rows ==0) {
+if($query3->num_rows ==0) { //checking if there is data to show. If not, the "no data to show" -message is displayed on the table
 		message();
 	}
-
+	//printing the query results on as a table
 	while($row3 = mysqli_fetch_array($query3)){
 		printf ("<tr><td>%s</td><td>%s</td><td>%s</td></tr>", htmlspecialchars($row3['feeling']), htmlspecialchars($row3['Duration']), htmlspecialchars($row3['MedicineInhales']));
         }
@@ -202,7 +210,7 @@ function message() { //function to display the error message in the tables if th
   
   <div class="col-lg-4 col-md-4 col-sm-4 hidden-xs"> <!-- styling for different screen sizes-->
 	</div>
-</div>
+</div></div>
 <?php }?>
 	
 	<?php include './footer.php'; ?> <!-- Getting footer from include file -->
