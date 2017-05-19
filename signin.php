@@ -83,6 +83,7 @@ if(isset($_POST["sign-in"])) {
 <div class="container">
 	
 	<div class="row backdrop"> <!-- using class "backdrop" to style the page with own css-->
+	<div class="container">
 	<div class="col-lg-4 col-md-4 col-sm-4 hidden-xs"> <!-- styling for different screen sizes-->
 	</div>
 	<div class="col-xs-12 col-lg-4 col-md-4 col-sm-4"> 
@@ -108,9 +109,8 @@ It allows you to monitor your sports activities and emergency medication use.
 <div style = "padding-top:1.5; color:blue;" class="error-message"><?php if(isset($message)) { echo $message; } ?></div>
 	</div>
 	<div class="col-lg-4 col-md-4 col-sm-4 hidden-xs"> <!-- styling for different screen sizes-->
-	</div>
+	</div></div></div>
 	<?php include './footer.php'; ?> <!-- Getting footer from include file -->
-	</div>
 	
 </div>
 

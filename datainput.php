@@ -87,6 +87,7 @@
 <div class="container">
 
 	<div class="row backdrop">
+	<div class="container">
 	<div class="col-lg-4 col-md-4 col-sm-4 hidden-xs"> <!-- styling for different screen sizes-->
 	</div>
 	<div class="col-xs-12 col-lg-4 col-md-4 col-sm-4"> 
@@ -167,10 +168,8 @@
 <div style = "padding-top:1.5; color:blue;" class="success-message"><?php if(isset($successmessage)) { echo $successmessage; } ?></div>
 	</div>
 	<div class="col-lg-4 col-md-4 col-sm-4 hidden-xs"> <!-- styling for different screen sizes-->
-	</div>
+	</div></div></div>
 	<?php include './footer.php'; ?> <!-- Getting footer from include file -->
-	</div>
-	
 	
 </div>
 

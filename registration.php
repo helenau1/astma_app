@@ -82,6 +82,7 @@ if(!isset($error_message)) { //if there are no errors in the form validations, t
 <div class="container">
 	
 	<div class="row backdrop"> <!-- using class "backdrop" to style the page with own css-->
+	<div class="container">
 	<div class="col-lg-4 col-md-4 col-sm-4 hidden-xs"> <!-- styling for different screen sizes-->
 	</div>
 	<div class="col-xs-12 col-lg-4 col-md-4 col-sm-4"> <!-- styling for different screen sizes-->
@@ -121,11 +122,11 @@ It allows you to monitor your sports activities and emergency medication use.
 
 	</div>
 	<div class="col-lg-4 col-md-4 col-sm-4 hidden-xs"> <!-- styling for different screen sizes-->
-	</div>
+	</div></div>></div>
 	<?php include './footer.php'; ?> <!-- Getting footer from include file -->
 	</div>
 	
-</div>
+
 
 </body>
 </html>
