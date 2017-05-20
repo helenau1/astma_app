@@ -99,6 +99,7 @@
 	<!--Choosing the date for adding data to the database-->
 	<div class="form-group">
   <h4>Date of the sport event</h4>
+  <h6>In case a calendar does not drop down, date format is <br>yyyy-mm-dd</h6>
   <div class="col-10">
     <input class="form-control" name="date" type="date" id="date-input" value="<?php if(isset($_POST['date'])) echo $_POST['date']; ?>"> 
   </div>
@@ -151,7 +152,7 @@
 	<!--Adding the amount of inhales-->
 	<div class="form-group">
     	<h4>Emergency medicine inhales</h4>
-    	<input type="number" class="form-control" name="inhales" value="<?php if(isset($_POST['inhales'])) echo $_POST['inhales']; ?>" min="0"> 
+    	<input type="number" class="form-control" name="inhales" value="<?php if(isset($_POST['inhales'])) echo $_POST['inhales']; ?>" min="0" max="5"> 
   	</div>
 
 	<!--Adding comments to the diary-->

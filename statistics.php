@@ -80,7 +80,7 @@ if(isset($_POST['statistics-query'])) {
 	<div class="col-xs-12 col-lg-4 col-md-4 col-sm-4"> 
 	
 	<h4>Check your statistics by choosing the wanted time period</h4>
-	
+	<h6>In case a calendar does not drop down, date format is <br>yyyy-mm-dd</h6>
 	<!-- Form for checking statistics for certain dates from the database-->
 	<form method="post" action=""> 
 	
